@@ -1,10 +1,14 @@
 use std::time::Instant;
 
 fn main() {
-
     // Fibonacci Generator
-    let term = 46;
+    let term = 15;
     let collatz_term = 1_000_000;
+    let nested_array = [
+        [1, 2, 3], //
+        [4, 5, 6],
+        [7, 8, 9],
+    ];
 
     // Fibonacci Recursively
     let start = Instant::now();
@@ -33,6 +37,14 @@ fn main() {
         (Instant::now() - start).as_secs_f64()
     );
 
+    // Nested Arrays
+    let start = Instant::now();
+    println!(
+        "Day 1 Afternoon: {:?} transposed is {:?} Duration: {} seconds",
+        nested_array,
+        transpose_array(nested_array),
+        (Instant::now() - start).as_secs_f64()
+    );
 }
 
 fn fib(n: u128) -> u128 {
@@ -61,43 +73,13 @@ fn fib2(n: u128) -> u128 {
     }
 }
 
-#[cfg(test)]
-mod fibonacci_tests{
-    use super::*;
-
-    #[test]
-    fn tenth_term_recursively_is_55() {
-        let result = fib(10);
-        assert_eq!(result, 55)
-    }
-    
-    #[test]
-    fn thirtieth_term_recursively_is_832040() {
-        let result = fib(30);
-        assert_eq!(result, 832040)
-    }
-    
-    #[test]
-    fn tenth_term_is_55() {
-        let result = fib2(10);
-        assert_eq!(result, 55)
-    }
-    
-    #[test]
-    fn thirtieth_term_is_832040() {
-        let result = fib2(30);
-        assert_eq!(result, 832040)
-    }    
-}
-
-
-fn collatz_length(mut num: i32) -> i32 {
+fn collatz_length(mut num: i32) -> u32 {
     if num < 1 {
         return 0;
     }
 
     if num == 1 {
-        return num;
+        return 1;
     }
 
     let mut length = 0;
@@ -109,10 +91,55 @@ fn collatz_length(mut num: i32) -> i32 {
             num = num * 3 + 1;
         }
 
-        length += 1;    
+        length += 1;
     }
-    
+
     length
+}
+
+fn transpose_array(matrix: [[i32; 3]; 3]) -> [[i32; 3]; 3] {
+    let mut new_array: [[i32; 3]; 3] = [
+        [0, 0, 0], //
+        [0, 0, 0],
+        [0, 0, 0],
+    ];
+
+    for i in 0..matrix.len() {
+        for j in 0..matrix[i].len() {
+            new_array[i][j] = matrix[j][i];
+        }
+    }
+
+    new_array
+}
+
+#[cfg(test)]
+mod fibonacci_tests {
+    use super::*;
+
+    #[test]
+    fn tenth_term_recursively_is_55() {
+        let result = fib(10);
+        assert_eq!(result, 55)
+    }
+
+    #[test]
+    fn thirtieth_term_recursively_is_832040() {
+        let result = fib(30);
+        assert_eq!(result, 832040)
+    }
+
+    #[test]
+    fn tenth_term_is_55() {
+        let result = fib2(10);
+        assert_eq!(result, 55)
+    }
+
+    #[test]
+    fn thirtieth_term_is_832040() {
+        let result = fib2(30);
+        assert_eq!(result, 832040)
+    }
 }
 
 #[cfg(test)]
@@ -137,5 +164,42 @@ mod collatz_tests {
     #[test]
     fn length_123456789() {
         assert_eq!(collatz_length(123456789), 177);
+    }
+}
+
+#[cfg(test)]
+mod transposed_array_tests {
+    use super::*;
+
+    #[test]
+    fn arr_1() {
+        assert_eq!(
+            transpose_array([
+                [1, 2, 3], //
+                [4, 5, 6],
+                [7, 8, 9]
+            ]),
+            [
+                [1, 4, 7], //
+                [2, 5, 8],
+                [3, 6, 9]
+            ]
+        );
+    }
+
+    #[test]
+    fn arr_2() {
+        assert_eq!(
+            transpose_array([
+                [101, 102, 103], //
+                [201, 202, 203],
+                [301, 302, 303]
+            ]),
+            [
+                [101, 201, 301], //
+                [102, 202, 302],
+                [103, 203, 303]
+            ]
+        );
     }
 }
