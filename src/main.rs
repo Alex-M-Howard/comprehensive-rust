@@ -4,11 +4,12 @@ fn main() {
 
     // Fibonacci Generator
     let term = 46;
+    let collatz_term = 1_000_000;
 
     // Fibonacci Recursively
     let start = Instant::now();
     println!(
-        "Day 1: Fibonacci - {}th Term = {} Duration: {} seconds",
+        "Day 1 Morning: Fibonacci - {}th Term = {} Duration: {} seconds",
         term,
         fib(term),
         (Instant::now() - start).as_secs_f64()
@@ -17,13 +18,21 @@ fn main() {
     // Fibonacci Non-Recursively
     let start = Instant::now();
     println!(
-        "Day 1: Fibonacci (Non-Recursive) - {}th Term = {} Duration: {} seconds",
+        "Day 1 Morning: Fibonacci (Non-Recursive) - {}th Term = {} Duration: {} seconds",
         term,
         fib2(term),
         (Instant::now() - start).as_secs_f64()
     );
 
     // Collatz
+    let start = Instant::now();
+    println!(
+        "Day 1 Morning: Collatz length of {} = {} Duration: {} seconds",
+        collatz_term,
+        collatz_length(collatz_term),
+        (Instant::now() - start).as_secs_f64()
+    );
+
 }
 
 fn fib(n: u128) -> u128 {
@@ -53,7 +62,7 @@ fn fib2(n: u128) -> u128 {
 }
 
 #[cfg(test)]
-mod tests{
+mod fibonacci_tests{
     use super::*;
 
     #[test]
@@ -79,4 +88,54 @@ mod tests{
         let result = fib2(30);
         assert_eq!(result, 832040)
     }    
+}
+
+
+fn collatz_length(mut num: i32) -> i32 {
+    if num < 1 {
+        return 0;
+    }
+
+    if num == 1 {
+        return num;
+    }
+
+    let mut length = 0;
+
+    while num != 1 {
+        if num % 2 == 0 {
+            num /= 2;
+        } else {
+            num = num * 3 + 1;
+        }
+
+        length += 1;    
+    }
+    
+    length
+}
+
+#[cfg(test)]
+mod collatz_tests {
+    use super::*;
+
+    #[test]
+    fn length_5() {
+        assert_eq!(collatz_length(3), 7);
+    }
+
+    #[test]
+    fn length_15() {
+        assert_eq!(collatz_length(15), 17);
+    }
+
+    #[test]
+    fn length_123() {
+        assert_eq!(collatz_length(123), 46);
+    }
+
+    #[test]
+    fn length_123456789() {
+        assert_eq!(collatz_length(123456789), 177);
+    }
 }
