@@ -9,6 +9,7 @@ fn main() {
         [4, 5, 6],
         [7, 8, 9],
     ];
+    let mut v = [1.0, 2.0, 9.0];
 
     // Fibonacci Recursively
     let start = Instant::now();
@@ -45,6 +46,17 @@ fn main() {
         transpose_array(nested_array),
         (Instant::now() - start).as_secs_f64()
     );
+
+    // Geometry
+    let start = Instant::now();
+    println!(
+        "Day 1 Afternoon: Magnitude of {:?} is {:?}. Duration: {} seconds",
+        v,
+        magnitude(&v),
+        (Instant::now() - start).as_secs_f64()
+    );
+    normalize(&mut v);
+    println!("Day 1 Afternoon: Magnitude after normalization: {:?}", v);
 }
 
 fn fib(n: u128) -> u128 {
@@ -107,6 +119,24 @@ fn transpose_array(matrix: [[i32; 3]; 3]) -> [[i32; 3]; 3] {
     }
 
     new_array
+}
+
+fn magnitude(vector: &[f64; 3]) -> f64 {
+    let mut result: f64 = 0.0;
+
+    for coord in vector {
+        result += coord * coord;
+    }
+
+    result.sqrt()
+}
+
+fn normalize(vector: &mut[f64; 3]) {
+    let mag = magnitude(vector);
+
+    for coord in vector {
+        *coord /= mag;
+    }
 }
 
 #[cfg(test)]
@@ -197,5 +227,22 @@ mod transposed_array_tests {
                 [103, 203, 303]
             ]
         );
+    }
+}
+
+#[cfg(test)]
+mod magnitude_tests {
+    use super::*;
+
+    #[test]
+    fn magnitude_1() {
+        assert_eq!(magnitude(&[1.0, 2.0, 9.0]), 9.273618495495704)
+    }
+
+    #[test]
+    fn normalize_1() {
+        let mut v = [1.0, 2.0, 9.0]; 
+        normalize(&mut v);
+        assert_eq!(v, [0.10783277320343841, 0.21566554640687682, 0.9704949588309457])
     }
 }
