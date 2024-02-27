@@ -98,11 +98,7 @@ fn collatz_length(mut num: i32) -> u32 {
 }
 
 fn transpose_array(matrix: [[i32; 3]; 3]) -> [[i32; 3]; 3] {
-    let mut new_array: [[i32; 3]; 3] = [
-        [0, 0, 0], //
-        [0, 0, 0],
-        [0, 0, 0],
-    ];
+    let mut new_array: [[i32; 3]; 3] = [[0; 3]; 3];
 
     for i in 0..matrix.len() {
         for j in 0..matrix[i].len() {
